@@ -1,1 +1,32 @@
+<%=
+  require 'byebug'
+  require 'faker'
+  require 'lastfm'
+
+  tracks = Track.all
+%>
+
 <h1>Starting Poster</h1>
+
+<%
+  while true
+    tracks.each do |trk|
+      # sleep Faker::Number.between(60, 100)
+      sleep 10
+
+      if @api_key != nil && @api_secret != nil
+        lastfm = Lastfm.new(@api_key, @api_secret)
+        token = lastfm.auth.get_token
+
+        digested_string = "api_key#{@api_key}methodauth.getSessiontoken#{token}"
+        digested_string.encode "UTF-8"
+        signature = Digest::MD5.hexdigest "#{digested_string}#{@api_secret}"
+
+        lastfm.session = lastfm.auth.get_session(token: token, api_sig: signature, api_key: @api_key )['key']
+
+        lastfm.track.scrobble(artist: trk.artist, track: trk.track, album: trk.album)
+        lastfm.track.update_now_playing(artist: trk.artist, track: trk.track, album: trk.album)
+      end
+    end
+  end
+%>
