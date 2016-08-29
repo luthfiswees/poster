@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'home/index'
+  get 'home/get_poster'
   get 'home/start_poster'
 
 root :to => 'home#index'

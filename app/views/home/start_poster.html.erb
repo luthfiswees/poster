@@ -16,7 +16,7 @@
 
       if @api_key != nil && @api_secret != nil
         lastfm = Lastfm.new(@api_key, @api_secret)
-        token = lastfm.auth.get_token
+        token = params['token']
 
         digested_string = "api_key#{@api_key}methodauth.getSessiontoken#{token}"
         digested_string.encode "UTF-8"
